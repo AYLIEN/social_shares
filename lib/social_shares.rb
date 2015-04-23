@@ -1,6 +1,7 @@
 require 'rest-client'
 require 'json'
 require 'social_shares/version'
+require 'social_shares/configuration'
 require 'social_shares/base'
 require 'social_shares/facebook'
 require 'social_shares/google'

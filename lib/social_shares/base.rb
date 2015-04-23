@@ -4,6 +4,10 @@ module SocialShares
 
     def initialize(checked_url)
       @checked_url = checked_url
+      
+      if Configuration.config[:http_proxy]
+        RestClient.proxy = Configuration.config[:http_proxy]
+      end
     end
 
     def shares
