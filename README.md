@@ -99,6 +99,13 @@ Does any network have at least one link?
 ```
 Note that #has_any? is faster than (#total > 0), because it stops on first network that has at least 1 sharing
 
+HTTP Proxy config
+-----
+HTTP Proxy can can be configured by:
+```
+SocialShares::Configuration.configure http_proxy: "http://example-proxy-server"
+```
+
 Instalation
 -----
 Include the gem in your Gemfile:
