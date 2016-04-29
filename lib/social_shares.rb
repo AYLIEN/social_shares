@@ -1,5 +1,6 @@
 require 'rest-client'
 require 'json'
+require 'social_shares/string_helper'
 require 'social_shares/version'
 require 'social_shares/configuration'
 require 'social_shares/base'
@@ -18,11 +19,17 @@ require 'social_shares/buffer'
 
 module SocialShares
   class << self
+    include SocialShares::StringHelper
+
+    def config=(val)
+      SocialShares::Base.config = val
+    end
+
     SUPPORTED_NETWORKS = [
       :vkontakte,
       :facebook,
       :google,
-      :twitter,
+      # :twitter,
       :mail_ru,
       :odnoklassniki,
       :reddit,
@@ -39,14 +46,22 @@ module SocialShares
 
     SUPPORTED_NETWORKS.each do |network_name|
       define_method(network_name) do |url|
-        class_name = network_name.to_s.split('_').map(&:capitalize).join
+        class_name = to_camel_case(network_name.to_s)
         SocialShares.const_get(class_name).new(url).shares
       end
 
       define_method("#{network_name}!") do |url|
-        class_name = network_name.to_s.split('_').map(&:capitalize).join
+        class_name = to_camel_case(network_name.to_s)
         SocialShares.const_get(class_name).new(url).shares!
       end
+    end
+
+    def omit(url, excluded_networks = [])
+      selected_base(url, supported_networks.map(&:to_s) - excluded_networks.map(&:to_s), false)
+    end
+
+    def omit!(url, excluded_networks = [])
+      selected_base(url, supported_networks.map(&:to_s) - excluded_networks.map(&:to_s), true)
     end
 
     def selected(url, selected_networks)
@@ -92,7 +107,7 @@ module SocialShares
   private
 
     def filtered_networks(selected_networks)
-      selected_networks.map(&:to_sym) & SUPPORTED_NETWORKS
+      selected_networks.map(&:to_s) & SUPPORTED_NETWORKS.map(&:to_s)
     end
 
     def thread_pool(lambdas)

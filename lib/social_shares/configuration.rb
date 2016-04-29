@@ -4,8 +4,9 @@ module SocialShares
   module Configuration
     # Configuration defaults
     @config = {
-                :http_proxy => nil
-              }
+      :http_proxy => nil,
+      :user_agent => "Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0"
+    }
 
     @valid_config_keys = @config.keys
 

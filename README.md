@@ -5,12 +5,14 @@ Social Shares
 
 Social shares is intended to easily check social sharings of an url.
 
+You can track how many times the url was shared in various social networks, such as facebook, twitter, etc. It can be useful for some kind landings with social mechanics or for tracking network activity of your content pages.
+
 Supported networks
 ------
 International:
 * [facebook](http://www.facebook.com/)
 * [google plus](https://plus.google.com)
-* [twitter](https://twitter.com/)
+* ~~[twitter](https://twitter.com/)~~ Looking for another way, because [API have been closed officially](https://blog.twitter.com/2015/hard-decisions-for-a-sustainable-platform)
 * [reddit](http://www.reddit.com/)
 * [linkedin](https://www.linkedin.com/)
 * [pinterest](http://www.pinterest.com/)
@@ -19,7 +21,7 @@ International:
 
 Russian:
 * [vkontakte](http://vkontakte.ru/)
-* [mail.ru](http://mail.ru/)
+* [mail.ru(aka moi mir)](http://my.mail.ru/)
 * [odnoklassniki](http://www.odnoklassniki.ru/)
 
 Chinese:
@@ -71,6 +73,16 @@ Fetch all shares by one method (#all, #all!):
  => RestClient::RequestTimeout: Request Timeout
 ```
 
+Fetch shares by excluding networks(#omit, #omit!):
+```ruby
+:000 > SocialShares.omit url, %w(facebook)
+ => { :google=>28289, :linkedin=>nil, ... }
+
+# same here
+:000 > SocialShares.omit! url, %w(facebook)
+ => RestClient::RequestTimeout: Request Timeout
+```
+
 Fetch shares of selected networks(#selected, #selected!):
 ```ruby
 :000 > SocialShares.selected url, %w(facebook google linkedin)
@@ -106,7 +118,33 @@ HTTP Proxy can can be configured by:
 SocialShares::Configuration.configure http_proxy: "http://example-proxy-server"
 ```
 
-Instalation
+Configuring
+-----
+You can specify timeout and open_timeout for each social network
+```ruby
+SocialShares.config = {
+  twitter: {timeout: 4, open_timeout: 7},
+  facebook: {timeout: 10, open_timeout: 15}
+}
+```
+
+- `:open_timeout` is the timeout for opening the connection. This is useful if you are calling servers with slow or shaky response times. Default value is 3 seconds.
+- `:timeout` is the timeout for reading the answer. This is useful to make sure you will not get stuck half way in the reading process, or get stuck reading a 5 MB file when you're expecting 5 KB of JSON. Default value is 3 seconds.
+
+If you use Rails, you can create file `config/initializers/social_shares.rb` and fill it with this config.
+
+Try it by yourself before installation
+-----
+Send request through shell to test numbers. Please do NOT use this url in your projects.
+```bash
+curl -X POST -d '{"url": "http://www.apple.com", "networks": ["facebook", "google", "reddit"]}' https://social-shares-api-cedar-14.herokuapp.com/
+```
+You will see:
+```bash
+{"facebook":312412,"google":46088,"reddit":114}
+```
+
+Installation
 -----
 Include the gem in your Gemfile:
 ```
@@ -139,6 +177,12 @@ SUPPORTED_NETWORKS = [:foo, :vkontakte, :facebook]
 ```
 * Update README: add link to list, possible answer in #all method, etc.
 
-Authors
+Author
 ----
-* [Timur Kozmenko](https://twitter.com/Timrael)
+* [Timur Kozmenko](https://twitter.com/Timrael) - timraell@gmail.com
+
+Contributors
+----
+* [Hamed Ramezanian](https://github.com/iCEAGE)
+* [Ciocanel Razvan](https://github.com/Chocksy)
+* [Mehdi FARSI](https://github.com/mehdi-farsi)
