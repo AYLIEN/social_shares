@@ -8,7 +8,7 @@ module SocialShares
       parsed_response = JSON.parse(response).first
 
       unless parsed_response.key?('error')
-        parsed_response[0]['result']['metadata']['globalCounts']['count'].to_i
+        parsed_response['result']['metadata']['globalCounts']['count'].to_i
       end
     end
 
