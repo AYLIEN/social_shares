@@ -4,8 +4,12 @@ module SocialShares
 
     def shares!
       response = post(URL, JSON.dump(params), { content_type: :json, accept: :json })
+      
+      parsed_response = JSON.parse(response).first
 
-      JSON.parse(response)[0]['result']['metadata']['globalCounts']['count'].to_i
+      unless parsed_response.key?('error')
+        parsed_response['result']['metadata']['globalCounts']['count'].to_i
+      end
     end
 
   private
