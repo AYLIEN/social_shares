@@ -8,7 +8,7 @@ module SocialShares
           :id => checked_url
         }
       })
-      JSON.parse(response)['share']['share_count'] || 0
+      JSON.parse(response).dig('share', 'share_count') || 0
     end
   end
 end
