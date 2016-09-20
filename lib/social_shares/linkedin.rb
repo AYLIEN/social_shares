@@ -1,6 +1,6 @@
 module SocialShares
   class Linkedin < Base
-    URL = 'http://www.linkedin.com/countserv/count/share'
+    URL = 'https://www.linkedin.com/countserv/count/share'
 
     def shares!
       response = get(URL, {
